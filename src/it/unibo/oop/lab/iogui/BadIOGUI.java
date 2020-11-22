@@ -5,10 +5,17 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -38,7 +45,18 @@ public class BadIOGUI {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
+        /*
+         * Ex 02.01
+         */
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new BoxLayout(panel1, BoxLayout.LINE_AXIS));
+        canvas.add(panel1, BorderLayout.CENTER);
+        panel1.add(write);
+        /*
+         * Ex 02.02
+         */
+        final JButton read = new JButton("Read from file");
+        panel1.add(read);        
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
@@ -62,6 +80,19 @@ public class BadIOGUI {
                 }
             }
         });
+        
+        read.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                try{
+                    final List<String> lines = Files.readAllLines(new File(PATH).toPath());
+                    lines.stream().forEach(line -> System.out.println(line));
+                } catch (IOException e1) {
+                    JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
+                }
+            }
+            
+        });
     }
 
     private void display() {
@@ -83,6 +114,10 @@ public class BadIOGUI {
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
+        /*
+         * Minimize the dimension of the frame
+         */
+        frame.pack();
         /*
          * OK, ready to pull the frame onscreen
          */
