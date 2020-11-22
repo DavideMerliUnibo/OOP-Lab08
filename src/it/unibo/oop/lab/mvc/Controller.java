@@ -24,5 +24,4 @@ public interface Controller {
      * an IllegalStateException should be thrown
      * 
      */
-
 }
