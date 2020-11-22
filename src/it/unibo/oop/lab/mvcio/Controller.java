@@ -1,5 +1,9 @@
 package it.unibo.oop.lab.mvcio;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+
 /**
  * 
  */
@@ -27,5 +31,33 @@ public class Controller {
      * System.getProperty("file.separator"). The combined use of those methods leads
      * to a software that runs correctly on every platform.
      */
+    private static final String HOME = System.getProperty("user.home");
+    private static final String SEPARATOR = System.getProperty("file.separator");
+    private static final String DEFAULT_FILE_NAME = "output.txt";
+    
+    private File currentFile = new File(HOME + SEPARATOR + DEFAULT_FILE_NAME);
+    
+    public void setCurrentFile(final File file) {
+        if(file.getParentFile().exists()) {
+            this.currentFile = file;
+        }
+        else {
+            throw new IllegalArgumentException("Cannot save in a non-existing folder!");
+        }
+    }
+    
+    public File getCurrentFile() {
+        return this.currentFile;
+    }
+    
+    public String getFilePath() {
+        return this.currentFile.getPath();
+    }
+    
+    public void writeOnFile(final String input) throws IOException {
+        try (PrintStream ps = new PrintStream(getCurrentFile())){
+            ps.println(input);
+        }
+    }
 
 }
