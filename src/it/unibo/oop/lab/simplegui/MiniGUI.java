@@ -10,9 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * This class is a simple application that writes a random number on a file.
@@ -24,6 +26,7 @@ import javax.swing.JPanel;
 public class MiniGUI {
 
     private static final String TITLE = "A very simple GUI application";
+    private static final String RESULT_TEXT_CONTENT = "Result: ";
     private static final int PROPORTION = 5;
     private final Random rng = new Random();
     private final JFrame frame = new JFrame(TITLE);
@@ -34,17 +37,28 @@ public class MiniGUI {
     public MiniGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
+        /*
+         * Ex 01.01
+         */
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new BoxLayout(panel1, BoxLayout.LINE_AXIS));
+        canvas.add(panel1, BorderLayout.CENTER);
         final JButton write = new JButton("Print a random number on standard output");
-        canvas.add(write, BorderLayout.CENTER);
+        panel1.add(write, BorderLayout.CENTER);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        /*
+         * Ex 01.02
+         */
+        final JTextField result = new JTextField(RESULT_TEXT_CONTENT);
+        canvas.add(result, BorderLayout.NORTH);        
         /*
          * Handlers
          */
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                System.out.println(rng.nextInt());
+                result.setText(RESULT_TEXT_CONTENT + Integer.toString(rng.nextInt()));
             }
         });
     }
@@ -69,6 +83,10 @@ public class MiniGUI {
          */
         frame.setLocationByPlatform(true);
         /*
+         * Minimize dimension of the frame
+         */
+        frame.pack();
+        /*
          * OK, ready to pull the frame onscreen
          */
         frame.setVisible(true);
@@ -78,7 +96,7 @@ public class MiniGUI {
      * @param args ignored
      */
     public static void main(final String... args) {
-       new MiniGUI().display();
+        new MiniGUI().display();
     }
 
 }
