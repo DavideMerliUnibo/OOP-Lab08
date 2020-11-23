@@ -12,7 +12,13 @@ import javax.swing.JOptionPane;
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
 
+    private static final String SEPARATOR = System.getProperty("file.separator");
+    private static final String USER = System.getProperty("user.home");
     private static final String FILENAME = "config.yml";
+    private static final String FILEPATH = USER + SEPARATOR + "Desktop" + SEPARATOR + "Università"
+                                           + SEPARATOR + "Programmazione a Oggetti" + SEPARATOR
+                                           + "Laboratory" + SEPARATOR + "OOP-Lab08" + SEPARATOR
+                                           + "res" + SEPARATOR + FILENAME;
     
     private int min;
     private int max;
@@ -56,7 +62,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     
     public void initializeSettings() {
         try (            
-            InputStream inStream = new FileInputStream(FILENAME);
+            InputStream inStream = new FileInputStream(FILEPATH);
             InputStream buffStream = new BufferedInputStream(inStream);
             DataInputStream dataStream = new DataInputStream(buffStream);
         ){
