@@ -1,12 +1,23 @@
 package it.unibo.oop.lab.advanced;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.swing.JOptionPane;
+
 /**
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
 
-    private static final int MIN = 0;
-    private static final int MAX = 100;
-    private static final int ATTEMPTS = 10;
+    private static final String FILENAME = "config.yml";
+    
+    private int min;
+    private int max;
+    private int attempts;
+    
     private final DrawNumber model;
     private final DrawNumberView view;
 
@@ -14,7 +25,8 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      * 
      */
     public DrawNumberApp() {
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+        initializeSettings();
+        this.model = new DrawNumberImpl(min, max, attempts);
         this.view = new DrawNumberViewImpl();
         this.view.setObserver(this);
         this.view.start();
@@ -41,6 +53,34 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     public void quit() {
         System.exit(0);
     }
+    
+    public void initializeSettings() {
+        try (            
+            InputStream inStream = new FileInputStream(FILENAME);
+            InputStream buffStream = new BufferedInputStream(inStream);
+            DataInputStream dataStream = new DataInputStream(buffStream);
+        ){
+            for(String line = dataStream.readLine(); line != null; line = dataStream.readLine()) {
+                final String[] result = line.split(": ");
+                if(result[0].contains("max")) {
+                    max = Integer.parseInt(result[1]);
+                }
+                else if(result[0].contains("min")) {
+                    min = Integer.parseInt(result[1]);
+                }
+                else if(result[0].contains("attempts")) {
+                    attempts = Integer.parseInt(result[1]);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Configuration failed!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+                    System.exit(1);
+                }
+            }
+            
+        } catch(IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     /**
      * @param args
@@ -48,6 +88,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      */
     public static void main(final String... args) {
         new DrawNumberApp();
+        
     }
 
 }
